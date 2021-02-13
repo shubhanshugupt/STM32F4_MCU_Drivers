@@ -1,0 +1,5 @@
+/Inc/
+/Debug/
+/stm32f4xx_drivers.launch/
+/STM32F407VGTX_FLASH.ld/
+/STM32F407VGTX_RAM.ld/
