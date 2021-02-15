@@ -192,6 +192,21 @@ typedef struct
 }SYSCFG_RegDef_t;
 
 
+typedef struct
+{
+	__vo uint32_t	CR1;			//Address offset: 0x00
+	__vo uint32_t	CR2;			//Address offset: 0x04
+	__vo uint32_t	SR;				//Address offset: 0x08
+	__vo uint32_t	DR;				//Address offset: 0x0C
+	__vo uint32_t	CRCPR;			//Address offset: 0x10
+	__vo uint32_t	RXCRCR;			//Address offset: 0x14
+	__vo uint32_t	TXCRCR;			//Address offset: 0x18
+	__vo uint32_t	I2SCFGR;		//Address offset: 0x1C
+	__vo uint32_t	I2SPR;			//Address offset: 0x20
+
+}SPI_RegDef_t;
+
+
 /* Peripheral definitions */
 #define GPIOA	( (GPIO_RegDef_t*) GPIOA_BASEADDR )
 #define GPIOB	( (GPIO_RegDef_t*) GPIOB_BASEADDR )
@@ -208,6 +223,11 @@ typedef struct
 #define EXTI	( (EXTI_RegDef_t*) EXTI_BASEADDR )
 
 #define SYSCFG	( (SYSCFG_RegDef_t*) SYSCFG_BASEADDR )
+
+#define SPI1	( (SPI_RegDef_t*) SPI1_BASEADDR )
+#define SPI2	( (SPI_RegDef_t*) SPI2_BASEADDR )
+#define SPI3	( (SPI_RegDef_t*) SPI3_BASEADDR )
+
 
 /* Clock Enable/Disable Macros for GPIOx Peripherals */
 #define GPIOA_CLK_EN()	( RCC->AHB1ENR |= (1 << 0) )
@@ -259,6 +279,16 @@ typedef struct
 #define SYSCFG_CLK_EN()	( RCC->APB2ENR |= (1 << 14) )
 #define SYSCFG_CLK_DI()	( RCC->APB2ENR &= ~(1 << 14) )
 
+
+/* Clock Enable/Disable macros for SPIx peripherals */
+#define SPI1_CLK_EN()	( RCC->APB2ENR |= (1 << 12) )
+#define SPI1_CLK_DI()	( RCC->APB2ENR &= ~(1 << 12) )
+
+#define SPI2_CLK_EN()	( RCC->APB1ENR |= (1 << 14) )
+#define SPI2_CLK_DI()	( RCC->APB1ENR &= ~(1 << 14) )
+
+#define SPI3_CLK_EN()	( RCC->APB1ENR |= (1 << 15) )
+#define SPI3_CLK_DI()	( RCC->APB1ENR &= ~(1 << 15) )
 
 
 #include "stm32f407xx_gpio_driver.h"
