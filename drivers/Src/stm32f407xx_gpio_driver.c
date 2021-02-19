@@ -153,6 +153,9 @@ void GPIO_PClkCtrl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
  -----------------------------------------------------------------------------------------*/
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
+	//0. Enable the Peripheral clock							//Updated on 19-Feb-2021
+	GPIO_PClkCtrl(pGPIOHandle->pGPIOx, ENABLE);
+
 	uint32_t	temp = 0;
 	//1. Configure the mode of GPIO pin
 	if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
@@ -169,21 +172,21 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 	else
 	{
 		//The interrupt mode
-		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_FT)
+		if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FT)
 		{
 			//1. Configure FTSR (Falling Trigger Selection Register)
 			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 			//Also reset the RTSR
 			EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 
-		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_RT)
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT)
 		{
 			//1. Configure RTSR (Rising Trigger Selection Register)
 			EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 			//Also reset the FTSR
 			EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 
-		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_IT_RFT)
+		}else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RFT)
 		{
 			//1. Configure FTSR and RTSR both
 			EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);

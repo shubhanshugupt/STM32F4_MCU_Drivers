@@ -71,6 +71,10 @@ void SPI_PClkCtrl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
  -----------------------------------------------------------------------------------------*/
 void SPI_Init(SPI_Handle_t *pSPIHandle)
 {
+
+	//0. Enable the Peripheral clock				(Updated on 19-Feb-2021)
+	SPI_PClkCtrl(pSPIHandle->pSPIx, ENABLE);
+
 	uint32_t tempreg = 0;
 
 	//1. Configure the device modes
@@ -123,12 +127,35 @@ void SPI_Init(SPI_Handle_t *pSPIHandle)
  *
  * @return		-	none
  *
- * @note		-	We have a special register in RCC peripheral, called AHB1 peripheral reset register
+ * @note		-	We have a special register in RCC peripheral, called APB1 and APB2 peripheral reset register
  * 					This will reset all the peripheral registers
  -----------------------------------------------------------------------------------------*/
 void SPI_DeInit(SPI_RegDef_t *pSPIx)
 {
+	if (pSPIx == SPI1)
+	{
+		SPI1_RESET();
+	}
+	else if (pSPIx == SPI2)
+	{
+		SPI2_RESET();
+	}
+	else if (pSPIx == SPI3)
+	{
+		SPI3_RESET();
+	}
+}
 
+uint8_t	FlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName)
+{
+	if ( pSPIx->SR & FlagName )
+	{
+		return FLAG_SET;
+	}
+	else
+	{
+		return FLAG_RESET;
+	}
 }
 
 //	Data Send and Receive
@@ -138,15 +165,43 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx)
  * @brief		-
  *
  * @param[in]	-	Address of the peripheral
- * @param[in]	-	none
+ * @param[in]	-	Pointer to TX buffer
+ * @param[in]	-	Data length in bytes
  *
  * @return		-	none
  *
- * @note		-
+ * @note		- This is a blocking call
  -----------------------------------------------------------------------------------------*/
 void SPI_DataSend(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t DataLen)
 {
+	while (DataLen > 0)
+	{
+		//1. Wait until TX buffer is empty
+		while ( ( FlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET) );
 
+		//2. Check the DFF bit in CR1 register
+		if ( ( pSPIx->CR1 & (1 << SPI_CR1_DFF) ) )
+		{
+			// 16 bit data format
+			//1. Load the data in DR register
+			pSPIx->DR = *((uint16_t*)pTxBuffer);
+			//2. Decrease DataLen twice
+			DataLen--;
+			DataLen--;
+			//3. Increment TX buffer
+			(uint16_t*)pTxBuffer++;
+		}
+		else
+		{
+			// 8 bit data format
+			//1. Load the data in DR register
+			pSPIx->DR = *(pTxBuffer);
+			//2. Decrease DataLen
+			DataLen--;
+			//3. Increment TX buffer
+			pTxBuffer++;
+		}
+	}
 }
 
 /*----------------------------------------------------------------------------------------
