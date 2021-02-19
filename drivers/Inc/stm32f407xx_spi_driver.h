@@ -78,6 +78,13 @@ typedef struct
 #define SPI_SCLK_BY_128			6
 #define SPI_SCLK_BY_256			7
 
+
+/*--------------------------SPI Flags----------------------------------------*/
+#define SPI_RXNE_FLAG			(1 << SPI_SR_RXNE)
+#define SPI_TXE_FLAG			(1 << SPI_SR_TXE)
+#define SPI_BUSY_FLAG			(1 << SPI_SR_BSY)
+
+
 /*-----------------------------------------------------------------------------
   					APIs supported by this Driver
  ----------------------------------------------------------------------------*/
