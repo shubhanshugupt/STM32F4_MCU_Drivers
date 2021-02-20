@@ -110,6 +110,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle)
 
 	//6. Configure Slave Select Mode
 	tempreg |= ( (pSPIHandle->SPI_PinConfig.SPI_SSM) << SPI_CR1_SSM);
+	tempreg |= ( (1 << SPI_CR1_SSI) );
 
 	//7. Configure Serial Clock Speed
 	tempreg |= ( (pSPIHandle->SPI_PinConfig.SPI_SCLKSpeed) << SPI_CR1_BR);
@@ -273,3 +274,26 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle)
 
 }
 
+/*----------------------------------------------------------------------------------------
+ * @fn			-	SPI_PCtrl
+ *
+ * @brief		-
+ *
+ * @param[in]	-	Address of the peripheral
+ * @param[in]	-	ENABLE or DISABLE macros, defined in MCU header file "stm32f407xx.h"
+ *
+ * @return		-	none
+ *
+ * @note		-
+ -----------------------------------------------------------------------------------------*/
+void SPI_PCtrl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
+}
