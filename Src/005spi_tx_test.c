@@ -56,8 +56,8 @@ void SPI2Init(void)
 	SPI2Handle.SPI_PinConfig.SPI_DeviceMode	= SPI_MODE_MASTER;
 	SPI2Handle.SPI_PinConfig.SPI_BusConfig	= SPI_BUS_FULL_DUP;
 	SPI2Handle.SPI_PinConfig.SPI_DFF		= SPI_DFF_8BIT;
-	SPI2Handle.SPI_PinConfig.SPI_CPHA		= SPI_CPHA_FIRST_EDGE;
-	SPI2Handle.SPI_PinConfig.SPI_CPOL		= SPI_CPOL_LOW;
+	SPI2Handle.SPI_PinConfig.SPI_CPHA		= SPI_CPHA_SECOND_EDGE;
+	SPI2Handle.SPI_PinConfig.SPI_CPOL		= SPI_CPOL_HIGH;
 	SPI2Handle.SPI_PinConfig.SPI_SSM		= SPI_SSM_EN;
 	SPI2Handle.SPI_PinConfig.SPI_SCLKSpeed	= SPI_SCLK_BY_2;
 
@@ -74,10 +74,16 @@ int main(void)
 	// Initialize SPI peripheral parameters
 	SPI2Init();
 
+	// Since SSM is enabled, SSI bit needs to be kept high.
+	SPI_SSIConfig(SPI2, ENABLE);
+
 	// Enable the SPI2 peripheral
 	SPI_PCtrl(SPI2, ENABLE);
 
 	SPI_DataSend(SPI2, (uint8_t*)Data, strlen(Data));
+
+	//Disable the SPI2 peripheral
+	SPI_PClkCtrl(SPI2, DISABLE);
 
 	while(1);
 
