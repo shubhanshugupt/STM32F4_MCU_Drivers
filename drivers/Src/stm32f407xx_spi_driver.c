@@ -218,6 +218,37 @@ void SPI_DataSend(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t DataLen)
  -----------------------------------------------------------------------------------------*/
 void SPI_DataReceive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t DataLen)
 {
+	while (DataLen > 0)
+	{
+		//1. Wait until Rx buffer is available
+		while (FlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET);
+
+		//2. Check the DFF bit in CR1 register
+		if ( ( pSPIx->CR1 & (1 << SPI_CR1_DFF) ) )
+		{
+			// 16 bit data format
+			//1. Load the data from DR to buffer
+			*((uint16_t*)pRxBuffer) = pSPIx->DR;
+			//2. Decrease DataLen twice
+			DataLen--;
+			DataLen--;
+			//3. Increment RX Buffer
+			(uint16_t*)pRxBuffer++;
+		}
+		else
+		{
+			// 8 bit data format
+			//1. Load the data from DR to buffer
+			*(pRxBuffer) = pSPIx->DR;
+			//2. Decrease DataLen
+			DataLen--;
+			//3. Increment RX Buffer
+			pRxBuffer++;
+
+		}
+
+
+	}
 
 }
 
