@@ -244,12 +244,8 @@ void SPI_DataReceive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t DataLen)
 			DataLen--;
 			//3. Increment RX Buffer
 			pRxBuffer++;
-
 		}
-
-
 	}
-
 }
 
 //	IRQ Configuration and ISR Handling

@@ -82,8 +82,11 @@ int main(void)
 
 	SPI_DataSend(SPI2, (uint8_t*)Data, strlen(Data));
 
+	//Wait till SPI is busy
+	while( FlagStatus(SPI2, SPI_BUSY_FLAG) );
+
 	//Disable the SPI2 peripheral
-	SPI_PClkCtrl(SPI2, DISABLE);
+	SPI_PCtrl(SPI2, DISABLE);
 
 	while(1);
 
