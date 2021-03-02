@@ -1,7 +1,7 @@
 /*
- * 005spi_tx_test.c
+ * 006spi_tx_withbutton.c
  *
- *  Created on: 18-Feb-2021
+ *  Created on: 02-Mar-2021
  *      Author: shubh
  */
 
@@ -46,6 +46,19 @@ void SPI2_GPIOInits(void)
 	GPIO_Init(&SPI2Pins);
 }
 
+void GPIOButton(void)
+{
+	//Create and Initialize the Handle structure for GPIO Button
+	GPIO_Handle_t GPIOButton;
+	GPIOButton.pGPIOx = GPIOA;
+	GPIOButton.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_0;
+	GPIOButton.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	GPIOButton.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_HIGH;
+	GPIOButton.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+
+	GPIO_Init(&GPIOButton);
+}
+
 
 /*------Function to initialize SPI2 Peripheral--------*/
 void SPI2Init(void)
@@ -71,6 +84,9 @@ int main(void)
 	// Initialize GPIO PIN to behave as SPI PIN
 	SPI2_GPIOInits();
 
+	// Initialize GPIO PIN for button
+	GPIOButton();
+
 	// Initialize SPI peripheral parameters
 	SPI2Init();
 
@@ -79,6 +95,9 @@ int main(void)
 
 	// Enable the SPI2 peripheral
 	SPI_PCtrl(SPI2, ENABLE);
+
+	// Wait for the button to be pressed
+	while( GPIO_ReadfromIPPin(GPIOA, GPIO_PIN_0) == RESET );
 
 	SPI_DataSend(SPI2, (uint8_t*)Data, strlen(Data));
 

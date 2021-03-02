@@ -108,6 +108,7 @@ void SPI_IRQHandling(SPI_Handle_t *pSPIHandle);
 //	Other peripheral control APIs
 void SPI_PCtrl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 uint8_t	FlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
 
 
