@@ -1,0 +1,12 @@
+stm32f407xx_gpio_driver.c:14:9:CONV_GPIOx_TO_PORTCODE	24	static
+stm32f407xx_gpio_driver.c:59:6:GPIO_PClkCtrl	16	static
+stm32f407xx_gpio_driver.c:154:6:GPIO_Init	24	static
+stm32f407xx_gpio_driver.c:279:6:GPIO_DeInit	16	static
+stm32f407xx_gpio_driver.c:332:9:GPIO_ReadfromIPPin	24	static
+stm32f407xx_gpio_driver.c:351:10:GPIO_ReadfromIPPort	24	static
+stm32f407xx_gpio_driver.c:371:6:GPIO_WriteToOPPin	16	static
+stm32f407xx_gpio_driver.c:395:6:GPIO_WriteToOPPort	16	static
+stm32f407xx_gpio_driver.c:412:6:GPIO_ToggleOPPin	16	static
+stm32f407xx_gpio_driver.c:430:6:GPIO_IRQConfig	24	static
+stm32f407xx_gpio_driver.c:482:6:GPIO_IRQPriorityConfig	24	static
+stm32f407xx_gpio_driver.c:504:6:GPIO_IRQHandling	16	static
