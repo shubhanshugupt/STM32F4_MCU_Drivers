@@ -3,5 +3,5 @@
 008spi_master_read.c:44:6:SPI2_GPIOInits	24	static
 008spi_master_read.c:72:6:GPIOButtonInit	24	static
 008spi_master_read.c:85:6:GPIOLedInit	24	static
-008spi_master_read.c:101:6:SPI2Init	24	static
+008spi_master_read.c:101:6:SPI2Init	40	static
 008spi_master_read.c:118:5:main	16	static

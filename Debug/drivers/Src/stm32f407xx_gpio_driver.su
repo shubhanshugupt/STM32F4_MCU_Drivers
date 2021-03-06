@@ -9,4 +9,4 @@ stm32f407xx_gpio_driver.c:395:6:GPIO_WriteToOPPort	16	static
 stm32f407xx_gpio_driver.c:412:6:GPIO_ToggleOPPin	16	static
 stm32f407xx_gpio_driver.c:430:6:GPIO_IRQConfig	24	static
 stm32f407xx_gpio_driver.c:482:6:GPIO_IRQPriorityConfig	24	static
-stm32f407xx_gpio_driver.c:504:6:GPIO_IRQHandling	16	static
+stm32f407xx_gpio_driver.c:503:6:GPIO_IRQHandling	16	static

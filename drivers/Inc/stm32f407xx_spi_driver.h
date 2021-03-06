@@ -23,9 +23,27 @@ typedef struct
 
 typedef struct
 {
-	SPI_RegDef_t *pSPIx;
-	SPI_PinConfig_t SPI_PinConfig;
+	SPI_RegDef_t	*pSPIx;				// Holds the base address of SPIx(x=0,1,2)
+	SPI_PinConfig_t	SPI_PinConfig;
+	uint8_t 		*pTxBuffer;			// Stores the address of TxBuffer
+	uint8_t			*pRxBuffer;			// Stores the address of RxBuffer
+	uint32_t		TxLen;				// Length of transmission data
+	uint32_t		RxLen;				// Length of reception data
+	uint8_t			TxState;			// Stores Tx State
+	uint8_t			RxState;			// Stores Rx State
 }SPI_Handle_t;
+
+
+/*---------------------SPI Application Possible States----------------------*/
+#define SPI_READY				0
+#define SPI_BUSY_IN_TX			1
+#define SPI_BUSY_IN_RX			2
+
+
+/*-------------------Possible SPI Application Events------------------------*/
+#define SPI_EVENT_TX_CMPLT		1
+#define SPI_EVENT_RX_CMPLT		2
+#define SPI_EVENT_OVR_ERR		3
 
 
 /*--------------------------SPI Device Modes--------------------------------*/
@@ -100,6 +118,10 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx);
 void SPI_DataSend(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t DataLen);
 void SPI_DataReceive(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t DataLen);
 
+//	Data Send and Receive by Interrupt
+uint8_t SPI_DataSendByIntr(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t DataLen);
+uint8_t SPI_DataReceiveByIntr(SPI_Handle_t *pSPIHandle, uint8_t *pRxBuffer, uint32_t DataLen);
+
 //	IRQ Configuration and ISR Handling
 void SPI_IRQConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
@@ -110,6 +132,12 @@ void SPI_PCtrl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 uint8_t	FlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
+void ClearOVRFlag(SPI_RegDef_t *pSPIx);
+void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle);
+void SPI_CloseReception(SPI_Handle_t *pSPIHandle);
+
+// Application Callbacks
+void SPI_ApplicationEventCallBack(SPI_Handle_t *pSPIHandle, uint8_t AppEvent);
 
 
 #endif /* INC_STM32F407XX_SPI_DRIVER_H_ */
