@@ -139,17 +139,11 @@ int main(void)
 	// Enable the SPI2 peripheral
 	SPI_PCtrl(SPI2, ENABLE);
 
-
-
 	// Wait for the button to be pressed
 	while( GPIO_ReadfromIPPin(GPIOA, GPIO_PIN_0) == RESET );
 
 	SPI_DataSend(SPI2, &Data, 1);
 	SPI_DataReceive(SPI2, &Read, 1);
-
-	delay();
-
-	//BlinkLed(Read);
 
 	//Wait till SPI is busy
 	while( FlagStatus(SPI2, SPI_BUSY_FLAG) );
@@ -157,39 +151,7 @@ int main(void)
 	//Disable the SPI2 peripheral
 	SPI_PCtrl(SPI2, DISABLE);
 
-	if(Read == 0)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-	}
-	else if(Read == 255)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-	}
-	else if(Read == 5)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-	}
-	else
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-	}
-
+	BlinkLed(Read);
 
 	while(1);
 

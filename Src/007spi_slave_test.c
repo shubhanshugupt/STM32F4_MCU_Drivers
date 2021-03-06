@@ -22,6 +22,19 @@ void delay(void)
 	for(uint32_t i=0; i<=1000000; i++);
 }
 
+void BlinkLed(uint8_t Read)
+{
+	GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
+	while (Read > 0)
+	{
+		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
+		delay();
+		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
+		delay();
+		Read--;
+	}
+}
+
 
 /*------Function to initialize GPIO PIN as SPI PIN-------*/
 void SPI2_GPIOInits(void)
@@ -87,7 +100,7 @@ void GPIOLedInit(void)
 
 int main(void)
 {
-	uint8_t Data = 5;
+	uint8_t Data = 6;
 	uint8_t Read = 1;
 
 	// Initialize GPIO PIN to behave as SPI PIN
@@ -114,38 +127,7 @@ int main(void)
 	//Disable the SPI2 peripheral
 	SPI_PCtrl(SPI2, DISABLE);
 
-	if(Read == 0)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-	}
-	else if(Read == 5)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-	}
-	else if(Read == 25)
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-	}
-	else
-	{
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, RESET);
-		delay();
-		GPIO_WriteToOPPin(GPIOD, GPIO_PIN_12, SET);
-		delay();
-	}
+	BlinkLed(Read);
 
 	while(1);
 

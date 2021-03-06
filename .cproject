@@ -70,12 +70,12 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.171236293" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.889283836.1080026632" name="008spi_master_read.c" rcbsApplicability="disable" resourcePath="Src/008spi_master_read.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296.741216239">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296.741216239" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296"/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.889283836.1341932088" name="007spi_slave_test.c" rcbsApplicability="disable" resourcePath="Src/007spi_slave_test.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296.1548515609">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296.1548515609" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1489052296"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
-						<entry excluding="007spi_slave_test.c|004button_interrupt.c|006spi_tx_withbutton.c|005spi_tx_test.c|004button_interrupt2.c|006spi_slave_test.c|001led_toggle.c|003led_freq.c|002led_button.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry excluding="008spi_master_read.c|004button_interrupt.c|006spi_tx_withbutton.c|005spi_tx_test.c|004button_interrupt2.c|006spi_slave_test.c|001led_toggle.c|003led_freq.c|002led_button.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Startup"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 					</sourceEntries>
