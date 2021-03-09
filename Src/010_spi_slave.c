@@ -1,10 +1,11 @@
 /*
- * 007spi_slave_test.c
+ * 010_spi_slave.c
  *
- *  Created on: 02-Mar-2021
+ *  Created on: 07-Mar-2021
  *      Author: shubh
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "stm32f407xx.h"
 
@@ -100,8 +101,10 @@ void GPIOLedInit(void)
 
 int main(void)
 {
-	uint8_t Data = 6;
-	uint8_t Read = 1;
+	char Send[10] = "Hi";
+	char Rec[10];
+	uint8_t SendLen = strlen(Send);
+	uint8_t RecLen;
 
 	// Initialize GPIO PIN to behave as SPI PIN
 	SPI2_GPIOInits();
@@ -118,8 +121,20 @@ int main(void)
 	// Enable the SPI2 peripheral
 	SPI_PCtrl(SPI2, ENABLE);
 
-	SPI_DataSend(SPI2, &Data, 1);
-	SPI_DataReceive(SPI2, &Read, 1);
+	SPI_DataSend(SPI2, &SendLen, 1);
+	SPI_DataReceive(SPI2, &RecLen, 1);
+
+	uint8_t MaxLen = SendLen;
+	if (MaxLen < RecLen)
+		MaxLen = RecLen;
+	uint8_t i = 0;
+
+	while(i < MaxLen)
+	{
+		SPI_DataSend(SPI2, &Send[i], 1);
+		SPI_DataReceive(SPI2, &Rec[i], 1);
+		i++;
+	}
 
 	//Wait till SPI is busy
 	while( FlagStatus(SPI2, SPI_BUSY_FLAG) );
@@ -127,7 +142,24 @@ int main(void)
 	//Disable the SPI2 peripheral
 	SPI_PCtrl(SPI2, DISABLE);
 
-	BlinkLed(Read);
+	BlinkLed(RecLen);
+
+	delay();
+	delay();
+
+	printf("Data received\n");
+	printf("otained data : %s\n", Rec);
+
+
+	uint8_t compare = strcmp("Hello", Rec);
+
+	if (compare == 0)
+	{
+		BlinkLed(1);
+	}
+	else {
+		BlinkLed(0);
+	}
 
 	while(1);
 

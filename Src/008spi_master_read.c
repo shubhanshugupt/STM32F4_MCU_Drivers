@@ -21,7 +21,7 @@
 
 void delay(void)
 {
-	for(uint32_t i=0; i<=1000000; i++);
+	for(uint32_t i=0; i<=500000; i++);
 }
 
 
@@ -117,7 +117,7 @@ void SPI2Init(void)
 
 int main(void)
 {
-	uint8_t Data = 25;
+	uint8_t Data = 5;
 	uint8_t Read = 10;
 
 	// Initialize GPIO PIN to behave as SPI PIN

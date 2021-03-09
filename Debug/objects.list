@@ -1,4 +1,4 @@
-"Src/007spi_slave_test.o"
+"Src/009_spi_master.o"
 "Src/syscalls.o"
 "Src/sysmem.o"
 "Startup/startup_stm32f407vgtx.o"

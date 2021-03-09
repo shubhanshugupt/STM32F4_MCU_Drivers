@@ -1,10 +1,11 @@
 /*
- * 007spi_slave_test.c
+ * 009_spi_master.c
  *
- *  Created on: 02-Mar-2021
+ *  Created on: 07-Mar-2021
  *      Author: shubh
  */
 
+#include <stdio.h>
 #include <string.h>
 #include "stm32f407xx.h"
 
@@ -65,22 +66,17 @@ void SPI2_GPIOInits(void)
 	GPIO_Init(&SPI2Pins);
 }
 
-
-/*------Function to initialize SPI2 Peripheral--------*/
-void SPI2Init(void)
+void GPIOButtonInit(void)
 {
-	SPI_Handle_t SPI2Handle;
+	//Create and Initialize the Handle structure for GPIO Button
+	GPIO_Handle_t GPIOButton;
+	GPIOButton.pGPIOx = GPIOA;
+	GPIOButton.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_0;
+	GPIOButton.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
+	GPIOButton.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_HIGH;
+	GPIOButton.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
-	SPI2Handle.pSPIx = SPI2;
-	SPI2Handle.SPI_PinConfig.SPI_DeviceMode	= SPI_MODE_SLAVE;
-	SPI2Handle.SPI_PinConfig.SPI_BusConfig	= SPI_BUS_FULL_DUP;
-	SPI2Handle.SPI_PinConfig.SPI_DFF		= SPI_DFF_8BIT;
-	SPI2Handle.SPI_PinConfig.SPI_CPHA		= SPI_CPHA_FIRST_EDGE;
-	SPI2Handle.SPI_PinConfig.SPI_CPOL		= SPI_CPOL_LOW;
-	SPI2Handle.SPI_PinConfig.SPI_SSM		= SPI_SSM_DI;
-	SPI2Handle.SPI_PinConfig.SPI_SCLKSpeed	= SPI_SCLK_BY_8;
-
-	SPI_Init(&SPI2Handle);
+	GPIO_Init(&GPIOButton);
 }
 
 void GPIOLedInit(void)
@@ -98,13 +94,36 @@ void GPIOLedInit(void)
 }
 
 
+/*------Function to initialize SPI2 Peripheral--------*/
+void SPI2Init(void)
+{
+	SPI_Handle_t SPI2Handle;
+
+	SPI2Handle.pSPIx = SPI2;
+	SPI2Handle.SPI_PinConfig.SPI_DeviceMode	= SPI_MODE_MASTER;
+	SPI2Handle.SPI_PinConfig.SPI_BusConfig	= SPI_BUS_FULL_DUP;
+	SPI2Handle.SPI_PinConfig.SPI_DFF		= SPI_DFF_8BIT;
+	SPI2Handle.SPI_PinConfig.SPI_CPHA		= SPI_CPHA_FIRST_EDGE;
+	SPI2Handle.SPI_PinConfig.SPI_CPOL		= SPI_CPOL_LOW;
+	SPI2Handle.SPI_PinConfig.SPI_SSM		= SPI_SSM_DI;
+	SPI2Handle.SPI_PinConfig.SPI_SCLKSpeed	= SPI_SCLK_BY_8;
+
+	SPI_Init(&SPI2Handle);
+}
+
+
 int main(void)
 {
-	uint8_t Data = 6;
-	uint8_t Read = 1;
+	char Send[10] = "Hello";
+	char Rec[10];
+	uint8_t SendLen = strlen(Send);
+	uint8_t RecLen;
 
 	// Initialize GPIO PIN to behave as SPI PIN
 	SPI2_GPIOInits();
+
+	// Initialize GPIO PIN for button
+	GPIOButtonInit();
 
 	// Initialize GPIO PIN for LED
 	GPIOLedInit();
@@ -112,14 +131,32 @@ int main(void)
 	// Initialize SPI peripheral parameters
 	SPI2Init();
 
-	// Since SSM is enabled, SSI bit needs to be kept low.
-	//SPI_SSIConfig(SPI2, DISABLE);
+	// Since SSM is enabled, SSI bit needs to be kept high.
+	//SPI_SSIConfig(SPI2, ENABLE);
+	SPI_SSOEConfig(SPI2, ENABLE);
 
 	// Enable the SPI2 peripheral
 	SPI_PCtrl(SPI2, ENABLE);
 
-	SPI_DataSend(SPI2, &Data, 1);
-	SPI_DataReceive(SPI2, &Read, 1);
+	// Wait for the button to be pressed
+	while( GPIO_ReadfromIPPin(GPIOA, GPIO_PIN_0) == RESET );
+
+	SPI_DataSend(SPI2, &SendLen, 1);
+	SPI_DataReceive(SPI2, &RecLen, 1);
+
+	delay();
+
+	uint8_t MaxLen = SendLen;
+	if (MaxLen < RecLen)
+		MaxLen = RecLen;
+	uint8_t i = 0;
+
+	while(i < MaxLen)
+	{
+		SPI_DataSend(SPI2, &Send[i], 1);
+		SPI_DataReceive(SPI2, &Rec[i], 1);
+		i++;
+	}
 
 	//Wait till SPI is busy
 	while( FlagStatus(SPI2, SPI_BUSY_FLAG) );
@@ -127,7 +164,23 @@ int main(void)
 	//Disable the SPI2 peripheral
 	SPI_PCtrl(SPI2, DISABLE);
 
-	BlinkLed(Read);
+	BlinkLed(RecLen);
+	printf("Data received\n");
+	printf("otained data : %s\n", Rec);
+
+	delay();
+	delay();
+
+
+	uint8_t compare = strcmp("Hi", Rec);
+
+	if (compare == 0)
+	{
+		BlinkLed(1);
+	}
+	else {
+		BlinkLed(0);
+	}
 
 	while(1);
 
